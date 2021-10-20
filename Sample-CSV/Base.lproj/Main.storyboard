@@ -24,11 +24,21 @@
                                     <action selector="generateCSVFile:" destination="BYZ-38-t0r" eventType="touchUpInside" id="gBQ-2B-muG"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qp9-SE-toA">
+                                <rect key="frame" x="158" y="513.5" width="98" height="31"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="plain" title="import CSV"/>
+                                <connections>
+                                    <action selector="importCSV:" destination="BYZ-38-t0r" eventType="touchUpInside" id="csU-Zw-i4Z"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
+                            <constraint firstItem="qp9-SE-toA" firstAttribute="top" secondItem="XfG-ew-tNT" secondAttribute="bottom" constant="50" id="XcN-FE-a8X"/>
                             <constraint firstItem="XfG-ew-tNT" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="s7d-jN-f5h"/>
+                            <constraint firstItem="qp9-SE-toA" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="xmP-Oi-JCu"/>
                             <constraint firstItem="XfG-ew-tNT" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="zWj-Gw-VGF"/>
                         </constraints>
                     </view>

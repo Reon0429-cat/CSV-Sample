@@ -6,20 +6,17 @@
 //
 
 import UIKit
+import UniformTypeIdentifiers
 
 class ViewController: UIViewController {
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
     }
-
+    
     @IBAction func generateCSVFile(_ sender: Any) {
-        let fileName = "test.csv"
-        let documentDirectoryPath = NSSearchPathForDirectoriesInDomains(.documentDirectory,
-                                                                        .userDomainMask,
-                                                                        true)[0]
-        let documentURL = URL(fileURLWithPath: documentDirectoryPath).appendingPathComponent(fileName)
+        // CSVファイル作成
         let output = OutputStream.toMemory()
         let csvWriter = CHCSVWriter(outputStream: output,
                                     encoding: String.Encoding.utf8.rawValue,
@@ -29,28 +26,51 @@ class ViewController: UIViewController {
         csvWriter?.writeField("Age")
         csvWriter?.finishLine()
         
-        var list = [[String]]()
-        list.append(["111", "reon", "20"])
-        list.append(["222", "tomoya", "54"])
-        list.append(["333", "kenta", "16"])
-        
-        for elements in list.enumerated() {
-            csvWriter?.writeField(elements.element[0])
-            csvWriter?.writeField(elements.element[1])
-            csvWriter?.writeField(elements.element[2])
+        let list: [[String]] = [
+            ["111", "reon", "20"],
+            ["222", "tomoya", "54"],
+            ["333", "kenta", "16"]
+        ]
+        for elements in list {
+            for index in 0..<elements.count {
+                csvWriter?.writeField(elements[index])
+            }
             csvWriter?.finishLine()
         }
         
         csvWriter?.closeStream()
-       
-        let buffer = (output.property(forKey: .dataWrittenToMemoryStreamKey) as? Data)!
         
-        do {
-            try buffer.write(to: documentURL)
-        } catch {
-            print("DEBUG_PRINT: ", error.localizedDescription)
-        }
+        
+        let fileName = "test.csv"
+        let documentDirectoryPath = NSSearchPathForDirectoriesInDomains(.documentDirectory,
+                                                                        .userDomainMask,
+                                                                        true)[0]
+        let documentURL = URL(fileURLWithPath: documentDirectoryPath).appendingPathComponent(fileName)
+        let buffer = (output.property(forKey: .dataWrittenToMemoryStreamKey) as? Data)!
+        try! buffer.write(to: documentURL)
+    }
+    
+    @IBAction func importCSV(_ sender: Any) {
+        let supportedFiles: [UTType] = [.data]
+        let documentPickerVC = UIDocumentPickerViewController(forOpeningContentTypes: supportedFiles,
+                                                              asCopy: true)
+        documentPickerVC.delegate = self
+        documentPickerVC.allowsMultipleSelection = false
+        present(documentPickerVC, animated: true)
     }
     
 }
 
+extension ViewController: UIDocumentPickerDelegate {
+    
+    func documentPicker(_ controller: UIDocumentPickerViewController,
+                        didPickDocumentsAt urls: [URL]) {
+        let url = urls.first!
+        let rows = NSArray(contentsOfCSVURL: url,
+                           options: .sanitizesFields)!
+        for row in rows {
+            print("DEBUG_PRINT: ", row)
+        }
+    }
+    
+}
